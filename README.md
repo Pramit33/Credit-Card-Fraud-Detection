@@ -14,3 +14,16 @@ Financial institutions face large losses due to fraudulent card transactions. Th
 **4.Compare results and recommend the best-performing approach.**
 
 The notebook is designed for learning, experimentation, and as a template you can extend with your own data or feature engineering.
+
+---
+
+## 📁 Repository Structure
+
+```
+Credit-Card-Fraud-Detection/
+├─ Credit_Card_Fraud.ipynb   # Main notebook with code, EDA and models
+├─ README.md                 # This file
+```
+
+---
+
