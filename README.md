@@ -5,12 +5,12 @@ A machine learning project that detects fraudulent credit card transactions usin
 
 Financial institutions face large losses due to fraudulent card transactions. This project provides a reproducible pipeline to:
 
- # 1.Explore and preprocess a credit card transactions dataset.
+**1.Explore and preprocess a credit card transactions dataset.**
 
- # 2.Train several classification models to separate legitimate transactions from fraud.
+**2.Train several classification models to separate legitimate transactions from fraud.**
 
 **3.Evaluate models using metrics appropriate for imbalanced data (precision, recall, F1-score, AUC-ROC).**
 
- 4.Compare results and recommend the best-performing approach.
+**4.Compare results and recommend the best-performing approach.**
 
 The notebook is designed for learning, experimentation, and as a template you can extend with your own data or feature engineering.
