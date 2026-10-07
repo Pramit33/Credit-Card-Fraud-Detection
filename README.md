@@ -1,78 +1,107 @@
-# Credit-Card-Fraud-Detection
-A machine learning project that detects fraudulent credit card transactions using supervised learning techniques. This repository contains a Jupyter notebook (Credit_Card_Fraud.ipynb) that walks through data preparation, exploratory analysis, model training, and evaluation.
+# Credit Card Fraud Detection
 
-# Project Overview
+A machine learning project where I try to spot fraudulent credit card transactions. Fraud is rare (well under 1% of the data), so the interesting part was figuring out how to judge a model fairly when "just guess legitimate every time" already scores 99.8% accuracy.
 
-Financial institutions face large losses due to fraudulent card transactions. This project provides a reproducible pipeline to:
+## What this project does
 
-**1.Explore and preprocess a credit card transactions dataset.**
+1. Loads and inspects a dataset of about 285,000 card transactions
+2. Checks for missing values and duplicates, and explores the class imbalance
+3. Trains four classification models on 80% of the data
+4. Tests them on the remaining 20% and compares precision, recall and F1-score
+5. Builds a SMOTE-balanced version of the training data for future experiments
 
-**2.Train several classification models to separate legitimate transactions from fraud.**
-
-**3.Evaluate models using metrics appropriate for imbalanced data (precision, recall, F1-score, AUC-ROC).**
-
-**4.Compare results and recommend the best-performing approach.**
-
-The notebook is designed for learning, experimentation, and as a template you can extend with your own data or feature engineering.
-
----
-
-## 📁 Repository Structure
+## Repository structure
 
 ```
 Credit-Card-Fraud-Detection/
-├─ Credit_Card_Fraud.ipynb   # Main notebook with code, EDA and models
-├─ README.md                 # This file
+├── Credit_Card_Fraud.ipynb   # Full code, EDA and model comparison
+└── README.md
 ```
 
----
+## Dataset
 
-## 📊 Dataset Overview
+I used the well-known [Credit Card Fraud Detection dataset from Kaggle](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) (European cardholders, September 2013).
 
-The dataset contains credit card transaction records
+- **284,807** transactions in total
+- **492** are fraud, which is only about **0.17%** of everything
+- 30 input features: `Time`, `Amount`, and `V1` to `V28` (anonymized, PCA-transformed for privacy)
+- Target column `Class`: `0` = legitimate, `1` = fraud
+- No missing values, but **1,081 duplicate rows** showed up in the check
 
-Features are numerical and anonymized for privacy
+## Exploratory analysis
 
-Target column:
+- Confirmed there are no null values in any column
+- Plotted a correlation heatmap of all features
+- Looked at how transactions are spread over time
+- Plotted the fraud vs non-fraud counts, which makes the imbalance obvious
 
-0 → Legitimate transaction
+## Models I tried
 
-1 → Fraudulent transaction
+- Decision Tree
+- Logistic Regression
+- K-Nearest Neighbors (KNN)
+- Support Vector Machine (linear SVM)
 
-Highly imbalanced dataset, requiring special evaluation metrics
+I split the data 80/20 (`random_state=42`), which gave 227,845 rows for training and 56,962 for testing. The test set contains 98 fraud cases, so every fraud the model misses really counts.
 
-## 🔍 Exploratory Data Analysis (EDA)
+## Results
 
-Checked missing values and data distribution
+| Model | Accuracy | Precision | Recall | F1-Score |
+|---|---|---|---|---|
+| Decision Tree | 0.9991 | 0.70 | 0.79 | 0.74 |
+| Logistic Regression | 0.9986 | 0.61 | 0.56 | 0.59 |
+| SVM (linear) | 0.9985 | 0.60 | 0.30 | 0.40 |
+| KNN | 0.9984 | 1.00 | 0.05 | 0.10 |
 
-Analyzed class imbalance between fraud and non-fraud transactions
+**Best model: Decision Tree.** It caught 77 of the 98 fraud cases in the test set (recall of about 79%) and had the best F1-score.
 
-Visualized transaction patterns using plots
+A few things worth noticing:
 
-## 🤖 Machine Learning Models Used
+- **Accuracy is misleading here.** Every model scores around 99.8% or higher, even KNN, which only caught 5 of 98 frauds.
+- **KNN looks perfect on precision but fails in practice.** Its precision is 1.0 because it almost never flags anything, so it missed 93 fraud cases out of 98.
+- **The SVM and Logistic Regression missed a lot of fraud too**, which is why recall and F1 are the numbers to watch for this problem.
 
-Logistic Regression
+## SMOTE
 
-Decision Tree Classifier
+I also used SMOTE to balance the training data (394 fraud vs 227,451 legitimate rows became 227,451 of each). I haven't trained the models on it yet, so all results above come from the original imbalanced data. That's my next step.
 
-Random Forest Classifier
+## Tools used
 
-Each model was trained and tested to identify fraudulent transactions effectively.
+- Python
+- Pandas, NumPy
+- Matplotlib, Seaborn
+- Scikit-learn
+- imbalanced-learn (SMOTE)
+- Google Colab
 
-## 📈 Model Evaluation Metrics
+## How to run it
 
-Due to data imbalance, standard accuracy is not sufficient. The following metrics were used:
+1. Clone the repo:
+   ```
+   git clone https://github.com/Pramit33/Credit-Card-Fraud-Detection.git
+   ```
+2. Install the libraries:
+   ```
+   pip install pandas numpy matplotlib seaborn scikit-learn imbalanced-learn jupyter
+   ```
+3. Download `creditcard.csv` from the Kaggle link above and put it in the project folder
+4. In the notebook, change the file path in the data-loading cell (it currently points to a Google Drive folder)
+5. Run all cells
 
-Precision
+## What I learned
 
-Recall
+The biggest lesson was that accuracy can look amazing while the model is basically useless. Looking at precision, recall and the confusion matrix told a very different story. I also saw that a simple Decision Tree beat the other models without any tuning.
 
-F1-Score
+## What I'd do next
 
-ROC-AUC Score
+- Train the models on the SMOTE-balanced data and compare
+- Add Random Forest and add ROC-AUC / precision-recall curves
+- Scale the features and tune hyperparameters
+- Try class weights as another way to handle the imbalance
 
-These metrics help evaluate how well the model detects fraud while minimizing false alarms.
+## Author
 
-👤 Author
+**Pramit De**
 
-Pramit De
+- LinkedIn: *https://www.linkedin.com/in/pramitde28/*
+- Email: *depramit28@gmail.com*
